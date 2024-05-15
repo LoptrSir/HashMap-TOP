@@ -1,10 +1,18 @@
 //TOP lesson HashMap
 
-5/14 It seems increasing array length requires refactoring each node into a tempBuckets array of 32, deleting current buckets, updating buckets to 32 then migrating tempBuckets to buckets.
+5/15 1327 broke resize funcionality out of set() into resize(). Addressed issues with this.sie updating properly for each object being removed and replaced.  Funtions as expected. But seems more complicated than it needs to be.
+5/14 
+1407 GoogleDoc HashMap Debugging has detailed notes about the problem with 3 Fred's causing problems. Changing the third Fred to Freddie causes everything to funciton correctly and add the last node Alicia Bitmore.  Need to explore why more than one linkedList Node causes the error.
+
+1026 albert[0], frez[1], will[2] appear in buckets until resize array is triggered at which point they are not present in buckets but are in tempBuckets as the only nodes (is rehash happening?). buckets then shows null for 0,1,and 2, other unused are empty.  Why is console of buckets displaying final array instead of the array at the time of being updated.
+
+1000It seems increasing array length requires refactoring each node into a tempBuckets array of 32, deleting current buckets, updating buckets to 32 then migrating tempBuckets to buckets. key/value that triggers update is not added to array.
+
  Issues at hand:
 Rehash needs to be based on the new length which pulls from buckets constructor: copy array, delete buckets, update buckets length.
 How do I delete the node after rehashing/assignment; review existing code.
 How do i delete the existing buckets after rehashing all nodes.
 How do I update buckets to 32 after the fact: run formula at the end prior to the merge?
+Add triggering key/value to array
 
 5/13  Refactoring new array to increase size.  It seems to refactor the array but does'nt terminate and throws a cannot read properties of undefined line 55.  The array is 16 slots with 12 items.  do it seems to have refactored the nodes but the array is 16 not 32.
