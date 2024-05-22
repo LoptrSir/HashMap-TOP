@@ -15,7 +15,7 @@ class Node {
 
 class HashMap {
   constructor() {
-    this.arrayLength = 16;
+    this.arrayLength = 8;
     this.buckets = new Array(this.arrayLength);
     this.size = 0;
   }
@@ -77,10 +77,11 @@ class HashMap {
           currentNode = currentNode.next;
         }
         this.buckets[i] = null;
+        console.log("Resize TemBuckets:", tempBuckets);
       }
-      this.buckets = tempBuckets;
-      console.log("Set new array length:", this.buckets.length);
     }
+    this.buckets = tempBuckets;
+    console.log("Set new array length:", this.buckets.length);
   }
 
   set(key, value) {
@@ -90,10 +91,9 @@ class HashMap {
     const newNode = new Node(key, value);
 
     if (this.size / this.buckets.length >= sizeFactor) {
-      console.log("Set: Array Length triggered");
+      console.log("Set: Array Length Resize Triggered");
       this.resize();
     }
-
     if (!this.buckets[hashCode]) {
       this.buckets[hashCode] = newNode;
       this.size++;
@@ -122,12 +122,21 @@ class HashMap {
   get(key) {
     //return value or null
     const hashCode = this.hash(key);
-    if (this.buckets[hashCode] === hashCode) {
-      return this.buckets[hashCode];
-    } else {
-      return null;
+    console.log('Get: hashCode', hashCode, key);
+  // Get the node at the computed hash code index
+  let currentNode = this.buckets[hashCode];
+
+  // Traverse the linked list in the bucket
+  while (currentNode != null) {
+    if (currentNode.key === key) {
+      console.log("Get: Key found.", key);
+      return currentNode.value; // Return the value associated with the key
     }
+    currentNode = currentNode.next;
   }
+  console.log('Get: Key not found', key);
+  return null; // Return null if the key is not found
+}
   has(key) {} //return true/false if key is present
   remove(key) {} //remove key return true, if not present return false
   length() {} //return number of stored keys
@@ -140,19 +149,20 @@ class HashMap {
 }
 
 let myHashMap = new HashMap();
-myHashMap.set("fred", "smith");
-myHashMap.set("fred", "jones");
-myHashMap.set("albert", "smith");
-myHashMap.set("dingle", "bawlz");
-myHashMap.set("frez", "smyth");
-myHashMap.set("will", "smith");
-myHashMap.set("jimmy", "bird");
+myHashMap.set("Fred", "Smith");
+myHashMap.set("Fred", "Jones");
+myHashMap.set("Albert", "Smith");
+myHashMap.set("Dingle", "Bawlz");
+myHashMap.set("Frez", "Smyth");
+myHashMap.set("Will", "Smith");
+myHashMap.set("Jimmy", "Bird");
 // myHashMap.set("fred", "bird");
-myHashMap.set("freddie", "bird");
+myHashMap.set("Freddie", "Bird");
 myHashMap.set("Evan", "Anderson");
 myHashMap.set("JC", "Anderson");
-myHashMap.set("niki", "Neeshan");
+myHashMap.set("Niki", "Neeshan");
 myHashMap.set("Jim", "Jones");
-console.log(myHashMap);
+// console.log(myHashMap);
 myHashMap.set("Alicia", "Bitmore");
 console.log(myHashMap);
+myHashMap.get("Niki");

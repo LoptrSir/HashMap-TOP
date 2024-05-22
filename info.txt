@@ -1,8 +1,9 @@
 //TOP lesson HashMap
 
+5/22 1236 Get function works.
 5/15 1327 broke resize funcionality out of set() into resize(). Addressed issues with this.sie updating properly for each object being removed and replaced.  Funtions as expected. But seems more complicated than it needs to be.
 5/14 
-1407 GoogleDoc HashMap Debugging has detailed notes about the problem with 3 Fred's causing problems. Changing the third Fred to Freddie causes everything to funciton correctly and add the last node Alicia Bitmore.  Need to explore why more than one linkedList Node causes the error.
+1407 GoogleDoc HashMap Debugging has detailed notes about the problem with 3 Fred's causing problems. Changing the third Fred to Freddie causes everything to function correctly and add the last node Alicia Bitmore.  Need to explore why more than one linkedList Node causes the error.
 
 1026 albert[0], frez[1], will[2] appear in buckets until resize array is triggered at which point they are not present in buckets but are in tempBuckets as the only nodes (is rehash happening?). buckets then shows null for 0,1,and 2, other unused are empty.  Why is console of buckets displaying final array instead of the array at the time of being updated.
 
