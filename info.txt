@@ -1,5 +1,6 @@
 //TOP lesson HashMap
 
+5/23 1351 completed all of the functions, broke HashMap, script, and HashSet into their own modules.  Everything works.
 5/22 1236 Get function works.
 5/15 1327 broke resize funcionality out of set() into resize(). Addressed issues with this.sie updating properly for each object being removed and replaced.  Funtions as expected. But seems more complicated than it needs to be.
 5/14 
