@@ -1,5 +1,7 @@
 //TOP lesson HashMap
 
+5/29 1312 declare hashSet inside HashMap. cleaned up code a bit.  Things are working as expected with one exception.  If I have three Fred's they nest fine until I want to resize the array then it breaks in resize at line 62.  This seems to only occur if there are three or more items in the bucket.
+
 5/23 1351 completed all of the functions, broke HashMap, script, and HashSet into their own modules.  Everything works.
 5/22 1236 Get function works.
 5/15 1327 broke resize funcionality out of set() into resize(). Addressed issues with this.sie updating properly for each object being removed and replaced.  Funtions as expected. But seems more complicated than it needs to be.

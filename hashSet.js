@@ -7,7 +7,7 @@ import { Node, HashMap } from "./hashMap.js";
 export class HashSet {
   constructor() {
     this.arrayLength = 8;
-    this.buckets = new Array(this.arrayLength);
+    this.buckets = new Array(this.arrayLength).fill(null);
     this.size = 0;
   }
 
@@ -85,6 +85,14 @@ export class HashSet {
         currentNode = currentNode.next;
         console.log("Buckets:", this.buckets);
       }
+      // while (currentNode) {
+      //   if (currentNode.key === key) {
+      //     currentNode.value = value;
+      //     return;
+      //   }
+      //   if (!currentNode.next) break;
+      //   currentNode = currentNode.next;
+      // }
       currentNode.next = newNode;
       this.size++;
       console.log(
@@ -96,4 +104,17 @@ export class HashSet {
       );
     }
   }
+
+  // createHashSetFromHashMap(HashMap){
+  //   const hashSet = new HashSet();
+  //   const keys = hashMap.keys();
+  //   keys.forEach(key => {
+  //     hashSet.add(key);
+  //   });
+  //   console.log('CreateHashSet:', hashSet);
+  //   return hashSet;
+  // }
 }
+
+// const myHashSet = new HashSet();
+// myHashSet.createHashSetFromHashMap(myHashMap);

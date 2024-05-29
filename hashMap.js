@@ -5,7 +5,9 @@
 //   throw new Error("Trying to access index out of bound");
 // }
 
-import {HashSet} from './hashSet.js';
+//HashMap
+
+import { HashSet } from "./hashSet.js";
 
 export class Node {
   constructor(key, value) {
@@ -18,7 +20,7 @@ export class Node {
 export class HashMap {
   constructor() {
     this.arrayLength = 8;
-    this.buckets = new Array(this.arrayLength);
+    this.buckets = new Array(this.arrayLength).fill(null);  //initializes each bucket as null
     this.size = 0;
   }
 
@@ -29,30 +31,26 @@ export class HashMap {
     for (let i = 0; i < key.length; i++) {
       hashCode = primeNumber * hashCode + key.charCodeAt(i);
     }
-    //console.log("hash:", hashCode % this.arrayLength);
     return hashCode % this.arrayLength;
   }
 
   resize() {
-    //resize when existing array becomes too small.
     this.arrayLength *= 2;
-    let tempBuckets = new Array(this.arrayLength);
+    let tempBuckets = new Array(this.arrayLength).fill(null);
 
     for (let i = 0; i < this.buckets.length; i++) {
       let currentNode = this.buckets[i];
       let previousNode = null;
 
       while (currentNode) {
-        // if (previousNode !== null) {
         if (previousNode) {
           previousNode.next = null; //detach previous node from current node
         }
-        //console.log("Resize: Temp", myHashMap, "size:", this.size);
         console.log("Resize CurrentNode:", currentNode);
-
-        //rehash key and create newNode in larger array
-        let newHashCode = this.hash(currentNode.key);
-        let newNode = new Node(currentNode.key, currentNode.value);
+        // let newHashCode = this.hash(currentNode.key);
+        // let newNode = new Node(currentNode.key, currentNode.value);
+        const newHashCode = this.hash(currentNode.key);
+        const newNode = new Node(currentNode.key, currentNode.value);
         this.size--;
 
         if (!tempBuckets[newHashCode]) {
@@ -70,14 +68,16 @@ export class HashMap {
         currentNode = currentNode.next;
       }
       this.buckets[i] = null;
-      console.log("Resize TempBuckets:", tempBuckets);
+      console.log("Resize Buckets2:", this.buckets);
+      console.log("Resize TempBuckets1:", tempBuckets);
     }
+    
     this.buckets = tempBuckets;
     console.log("Set new array length:", this.buckets.length);
   }
 
   set(key, value) {
-    //creates a node
+    //creates a node/bucket
     let sizeFactor = 0.75;
     const hashCode = this.hash(key);
     const newNode = new Node(key, value);
@@ -89,22 +89,21 @@ export class HashMap {
     if (!this.buckets[hashCode]) {
       this.buckets[hashCode] = newNode;
       this.size++;
-      console.log(
-        "set: NewNode Added-",
-        hashCode,
-        key,
-        value,
-        "size:",
-        this.size
-      );
-      console.log("Set: Buckets-", this.buckets);
+      console.log("Set: Buckets-", this.buckets, this.size);
     } else {
       let currentNode = this.buckets[hashCode];
       while (currentNode.next) {
         currentNode = currentNode.next;
-        //console.log("myHashMap:", myHashMap);
         console.log("Buckets:", this.buckets);
       }
+      // while (currentNode) {
+      //   if (currentNode.key === key) {
+      //     currentNode.value = value;
+      //     return;
+      //   }
+      //   if (!currentNode.next) break;
+      //   currentNode = currentNode.next;
+      // }
       currentNode.next = newNode;
       this.size++;
       console.log(
@@ -121,11 +120,8 @@ export class HashMap {
   get(key) {
     //return value or null
     const hashCode = this.hash(key);
-    //console.log("Get: hashCode", hashCode, key);
     let currentNode = this.buckets[hashCode];
 
-    // Traverse the linked list in the bucket
-    // while (currentNode != null) {
     while (currentNode) {
       if (currentNode.key === key) {
         console.log("Get: Key found-", key);
@@ -137,13 +133,11 @@ export class HashMap {
     return null; // Return null if the key is not found
   }
 
-  has(key) {
+  has(key) {  //**rewrite for console logs **/
     //return true/false if key is present/not present
     const hashCode = this.hash(key);
-    //console.log("Has: hashCode", hashCode, key);
     let currentNode = this.buckets[hashCode];
 
-    // while (currentNode != null) {
     while (currentNode) {
       if (currentNode.key === key) {
         console.log("Has: Key found-", key);
@@ -158,19 +152,17 @@ export class HashMap {
   remove(key) {
     //remove key return true, if not present return false
     const hashCode = this.hash(key);
-    //console.log("Remove: hashCode", hashCode, key);
     let currentNode = this.buckets[hashCode];
     let previousNode = null;
 
     while (currentNode) {
       if (currentNode.key === key) {
-        if (previousNode === null) {
-          this.buckets[hashCode] = currentNode.next;
-          this.size--;
-        } else {
+        if (previousNode) {
           previousNode.next = currentNode.next;
-          this.size--;
+        } else {
+          this.buckets[hashCode] = currentNode.next;
         }
+        this.size--;
         console.log("Remove: Key removed-", key);
         return true;
       }
@@ -182,29 +174,16 @@ export class HashMap {
   }
 
   length() {
-    //return number of stored keys
-
-    let total = 0;
-
-    for (let i = 0; i < this.buckets.length; i++) {
-      let currentNode = this.buckets[i];
-
-      while (currentNode) {
-        total++;
-        currentNode = currentNode.next;
-      }
-    }
-    console.log("Length:", total);
-    return total;
+    return this.size;
   }
 
   clear() {
-    //clear all entries in hashmap
+    //clear all entries
     this.arrayLength = 8;
-    this.buckets = new Array(this.arrayLength);
+    this.buckets = new Array(this.arrayLength).fill(null);
     this.size = 0;
-    console.log('Clear:', this.buckets,'size', this.size);
-  } 
+    console.log("Clear:", this.buckets, "size", this.size);
+  }
 
   keys() {
     //return array w/ all keys
@@ -212,7 +191,6 @@ export class HashMap {
 
     for (let i = 0; i < this.buckets.length; i++) {
       let currentNode = this.buckets[i];
-
       while (currentNode) {
         keys.push(currentNode.key);
         currentNode = currentNode.next;
@@ -220,23 +198,23 @@ export class HashMap {
     }
     console.log("Keys:", keys);
     return keys;
-  } 
+  }
 
   values() {
     //return array w/ all values
-  let values = [];
+    let values = [];
 
-  for (let i =0; i < this.buckets.length; i++){
-    let currentNode = this.buckets[i];
+    for (let i = 0; i < this.buckets.length; i++) {
+      let currentNode = this.buckets[i];
 
-    while(currentNode) {
-      values.push(currentNode.value);
-      currentNode = currentNode.next;
+      while (currentNode) {
+        values.push(currentNode.value);
+        currentNode = currentNode.next;
+      }
     }
+    console.log("Values:", values);
+    return values;
   }
-  console.log('Values:', values);
-  // return values;
-  } 
 
   entries() {
     //return array with all key, value pairs
@@ -244,46 +222,57 @@ export class HashMap {
 
     for (let i = 0; i < this.buckets.length; i++) {
       let currentNode = this.buckets[i];
-      while(currentNode){
+      while (currentNode) {
         entries.push([currentNode.key, currentNode.value]);
         currentNode = currentNode.next;
       }
     }
-    console.log('Entries:', entries);
+    console.log("Entries:", entries);
     return entries;
-  } 
+  }
 
   //Extra Credit
-  //hashSet() {} //FACTORY similar toe HashMap but contains only keys
+  createHashSet() {
+    const hashSet = new HashSet();
+    const keys = this.keys();
+    keys.forEach(key => {
+      hashSet.set(key);
+    })
+    console.log('createHashSet:', hashSet);
+    return hashSet;
+  }
 }
 
-// let myHashMap = new HashMap();
-// myHashMap.set("Fred", "Smith");
-// myHashMap.set("Fred", "Jones");
-// myHashMap.set("Albert", "Smith");
-// myHashMap.set("Dingle", "Bawlz");
-// myHashMap.set("Frez", "Smyth");
-// myHashMap.set("Will", "Smith");
-// myHashMap.set("Jimmy", "Bird");
-// // myHashMap.set("Fred", "Bird");
-// myHashMap.set("Freddie", "Bird");
-// myHashMap.set("Evan", "Anderson");
-// myHashMap.set("JC", "Anderson");
-// myHashMap.set("Niki", "Neeshan");
-// myHashMap.set("Jim", "Jones");
-// // console.log(myHashMap);
-// myHashMap.set("Alicia", "Bitmore");
-// console.log(myHashMap);
-// myHashMap.get("Niki");
-// myHashMap.get("SirNotAppearing");
-// myHashMap.has("Niki");
-// myHashMap.has("SirNotAppearing");
-// //myHashMap.remove("Niki");
-// myHashMap.remove("SirNotAppearing");
-// console.log(myHashMap);
-// myHashMap.length();
-// myHashMap.keys();
-// myHashMap.values();
-// myHashMap.entries();
-// // myHashMap.hashSet();
-// //myHashMap.clear();  
+let myHashMap = new HashMap();
+//let myHashSet = myHashMap.createHashSet();
+
+myHashMap.set("Fred", "Smith");
+myHashMap.set("Fred", "Jones");
+// myHashMap.set("Fred", "Bird");
+// myHashMap.set("Fred", "Erickson");
+myHashMap.set("Albert", "Smith");
+myHashMap.set("Dingle", "Bawlz");
+myHashMap.set("Frez", "Smyth");
+myHashMap.set("Will", "Smith");
+myHashMap.set("Jimmy", "Bird");
+myHashMap.set("Freddie", "Bird");
+myHashMap.set("Evan", "Anderson");
+myHashMap.set("JC", "Anderson");
+myHashMap.set("Niki", "Neeshan");
+myHashMap.set("Jim", "Jones");
+console.log(myHashMap);
+myHashMap.set("Alicia", "Bitmore");
+console.log(myHashMap);
+myHashMap.get("Niki");
+myHashMap.get("SirNotAppearing");
+myHashMap.has("Niki");
+myHashMap.has("SirNotAppearing");
+//myHashMap.remove("Niki");
+myHashMap.remove("SirNotAppearing");
+console.log(myHashMap);
+myHashMap.length();
+myHashMap.keys();
+myHashMap.values();
+myHashMap.entries();
+myHashMap.createHashSet();
+// //myHashMap.clear();
